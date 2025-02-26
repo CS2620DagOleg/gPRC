@@ -1,0 +1,6 @@
+{
+    "server_host": "0.0.0.0",
+    "server_port": 50051,
+    "client_connect_host": "localhost"
+  }
+  
