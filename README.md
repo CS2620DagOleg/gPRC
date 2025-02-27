@@ -1,4 +1,4 @@
-# Chat Application Documentation (gRPC Implementation)
+# ChatApp Documentation (gRPC Implementation)
 
 This document provides a guide for our Chat Client/Server application implemented in Python with gRPC. Unlike previous versions that offered custom-delimited or JSON-based protocols, this implementation uses **gRPC** to handle all communications between the client and server. The gRPC approach offers a strongly typed API, automatic code generation from a `.proto` file, and built-in support for asynchronous calls and error handling.
 
