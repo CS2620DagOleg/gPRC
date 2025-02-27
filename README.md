@@ -54,10 +54,8 @@ This **Chat Application** uses **gRPC** to facilitate communication between a mu
 
 3. **Listing Accounts**
    - Request a list of all user accounts, with an optional regex pattern for filtering (e.g. users starting with “A”).
-
-4. **Logging**
-   - Both client and server write timestamped log files for debugging and auditing in a `logs/` directory.
-
+  
+   
 ---
 
 ## 3. Architecture and Flow
