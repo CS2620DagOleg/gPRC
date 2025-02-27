@@ -1,0 +1,119 @@
+
+     ----------------------------------------
+     gPRC implementation engineering notebook
+     ----------------------------------------
+
+** 20250220
+
+Reviewed PRC readings and other online sources to brainstorm implementation techniques.
+We decided to heed professor's suggestion and use gPRC as our method. 
+
+Before, for our custom implementation we used request encoding in a format for example "version|code|field1|field2|...\n". The system mapped high-level operations (like creating an account, logging in, or sending a message) to numeric codes and required manual encoding and decoding of these messages. Previously we had to handle the messages manually, the process was error-prone and the overhead of required changes when we were updating our protocol were significant. 
+
+Researched gPRC protocol buffer proto file syntax.
+Example:
+
+syntax = "proto3";
+
+message SearchRequest {
+  string query = 1;
+  int32 page_number = 2;
+  int32 results_per_page = 3;
+}
+
+Services will be defined to specify each method which should align with our previous functionality and should transfer seamlessly. 
+
+
+** 20250222
+
+
+Relying on grpcio-tools for the code generation using the .proto file. Ensured version compability with Python version. 
+Our service definition with the various methods, including response drawing from our previous implementation:
+
+service ChatService {
+  rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc ListAccounts(ListAccountsRequest) returns (ListAccountsResponse);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc ReadNewMessages(ReadNewMessagesRequest) returns (ReadNewMessagesResponse);
+  rpc DeleteMessages(DeleteMessagesRequest) returns (DeleteMessagesResponse);
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+  rpc ListMessages(ListMessagesRequest) returns (ListMessagesResponse);
+}
+
+example client-> server:
+
+message ListAccountsRequest {
+  string username = 1;
+  string pattern = 2;
+}
+
+
+example server-> client response: 
+
+message ListAccountsResponse {
+  repeated string accounts = 1;
+  bool success = 2;
+}
+
+
+Refactored previous code based on custom functionality, integrated with draft .proto.
+
+
+** 20250223
+
+Integration testing of functionality: GO. 
+- functionality maintained, login, message, through deletion lifecycle verified.
+
+Adjusted documentation based on our new implementation, focusing on added steps in setup.
+Added observations highlighting gPRC differences to documentation. 
+
+** 20250226
+
+--------------------------------
+Reflection on our implementation
+--------------------------------
+
+Having the wire implementation in .proto file was a refreshing and modular way to implement communication between client and server in our application. gPRC greatly streamlined the communication, essentially offloading message serialization, deserialization, network comms above and beyond what Python socket module could do. 
+
+After the initial steep learning curve concerning new method of implementation and thinking through how to keep most of our code while transitioning to gPRC, the actual protocol buffer was rather straightforward. 
+
+Custom implementation and JSON did have some advantages. Custom protocol was lightweight with minimal overhead. Every aspect could be tweaked, which of course was overall negative in our domain, but can be beneficial if the target product has unique requirements or specifications. 
+
+gPRC is strongly typed which forces strict API and is great for well-defined implementation and early bug and strange behavior preventnion. TypeScript vs JS - like benefits. 
+
+Code generation functionality prevented syntax and other errors as compared to our previous implementations. The gPRC framework has proven robust. 
+
+We also predict the gPRC codebase is highly maintainable and scalable and can interact with various clients as long as .proto specifications are adhered to. In production environment, we would definitely go with gPRC implementation. 
+Another valuable contribution by Google. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
