@@ -104,3 +104,6 @@ TOTAL               397     108      73%
 ```
 
 Overall test coverage is at 73%, which is acceptable but could be improved. The auto-generated code (chat_pb2.py and chat_pb2_grpc.py) has lower coverage as expected, but our main server.py implementation has a solid 82% coverage. The testing file itself has almost complete coverage at 99%.
+
+** Gen AI Statement
+We have used copilot powered by ChatGPT in the implementation for research, debugging and asking questions. 
