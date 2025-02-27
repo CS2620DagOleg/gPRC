@@ -53,7 +53,7 @@ This **Chat Application** uses **gRPC** to facilitate communication between a mu
    - **Delete Messages**: Remove individual messages (by 1-indexed ID) or all messages at once.
 
 3. **Listing Accounts**
-   - Request a list of all user accounts, with an optional regex pattern for filtering (e.g. users starting with “A”).
+   - Request a list of all user accounts, with an optional regex pattern for filtering (e.g. users starting with "A").
   
    
 ---
@@ -63,7 +63,7 @@ This **Chat Application** uses **gRPC** to facilitate communication between a mu
 ### Server
 
 - **gRPC Server**: Listens on a specified TCP port (e.g. `0.0.0.0:50051`).
-- **Thread Pool**: Each RPC call is handled by a thread from a pool (via gRPC’s built-in threading).
+- **Thread Pool**: Each RPC call is handled by a thread from a pool (via gRPC's built-in threading).
 - **In-Memory Database**: Uses a dictionary (`users_db`) to store user data and messages.
 - **Logging**: Major events (connections, account changes, message transfers) are logged.
 
@@ -126,11 +126,11 @@ python chat_client.py
 ### Common User Actions via the GUI
 
 1. **Create Account**
-   - Select “Create Account” and enter a new username and password.
+   - Select "Create Account" and enter a new username and password.
    - On success, a confirmation message is displayed.
 
 2. **Login**
-   - Enter your credentials on the “Login” screen.
+   - Enter your credentials on the "Login" screen.
    - Upon successful login, the user is informed of the number of unread messages.
 
 3. **Send Message**
@@ -149,7 +149,7 @@ python chat_client.py
    - Confirm deletion to remove your account and all associated messages from the server.
 
 7. **Delete Messages**
-   - In the “Show All Messages” window, select individual messages (using checkboxes) or choose to delete all messages by sending a special value.
+   - In the "Show All Messages" window, select individual messages (using checkboxes) or choose to delete all messages by sending a special value.
 
 ---
 
@@ -206,7 +206,7 @@ message ListMessagesResponse { repeated string messages = 1; bool success = 2; }
 
 ### 7.1 Overview
 
-We use **Python’s `unittest`** framework for server-side testing. Tests ensure that each gRPC call (e.g., `CreateAccount`, `Login`, `SendMessage`) behaves correctly against an in-memory database (`users_db`). We also employ **coverage** to measure how much of the code our tests exercise.
+We use **Python's `unittest`** framework for server-side testing. Tests ensure that each gRPC call (e.g., `CreateAccount`, `Login`, `SendMessage`) behaves correctly against an in-memory database (`users_db`). We also employ **coverage** to measure how much of the code our tests exercise.
 
 ### 7.2 Installing Test Dependencies
 
@@ -214,6 +214,15 @@ Make sure you have all necessary packages installed, including `coverage`:
 
 ```bash
 pip install grpcio grpcio-tools protobuf coverage
+```
+- Use the following two commands to run the tests
+
+```
+python -m coverage run -m unittest discover -s .
+python -m coverage report
+```
+
+ 
 ---
 
 ## 8. Troubleshooting
