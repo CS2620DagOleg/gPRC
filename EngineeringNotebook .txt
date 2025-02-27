@@ -1,5 +1,5 @@
-----------------------------------------
-     gPRC implementation engineering notebook
+     ----------------------------------------
+     gPRC Implementation Engineering Notebook
      ----------------------------------------
 
 ** 20250220
@@ -83,7 +83,6 @@ gPRC is strongly typed which forces strict API and is great for well-defined imp
 
 Code generation functionality prevented syntax and other errors as compared to our previous implementations. The gPRC framework has proven robust. 
 
-We 
 
 We also predict the gPRC codebase is highly maintainable and scalable and can interact with various clients as long as .proto specifications are adhered to. In production environment, we would definitely go with gPRC implementation. 
 Another valuable contribution by Google. 
