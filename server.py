@@ -12,7 +12,7 @@ import chat_pb2
 import chat_pb2_grpc
 
 # ---------------------------
-# Load configuration
+# Load configuration from config.json
 # ---------------------------
 with open("config.json", "r") as config_file:
     config = json.load(config_file)
@@ -46,6 +46,7 @@ def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
 class ChatService(chat_pb2_grpc.ChatServiceServicer):
+    #handling user registration with create account method
     def CreateAccount(self, request, context):
         username = request.username
         password = request.password
@@ -56,7 +57,8 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
         users_db[username] = {"password": password, "messages": []}
         logging.info(f"Account created: {username}")
         return chat_pb2.CreateAccountResponse(message=f"Account '{username}' created successfully", success=True)
-
+        
+    #authenticating a user and returning the number of unread messages
     def Login(self, request, context):
         username = request.username
         password = request.password
@@ -74,6 +76,9 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
             success=True
         )
 
+    # List all user accounts, also made flexible to list accounts with pattern
+    
+
     def ListAccounts(self, request, context):
         pattern = request.pattern
         all_users = list(users_db.keys())
@@ -83,7 +88,8 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
             matches = all_users
         logging.info(f"Listing accounts with pattern: '{pattern}'")
         return chat_pb2.ListAccountsResponse(accounts=matches, success=True)
-
+    
+    #sending a message from one user to another 
     def SendMessage(self, request, context):
         # Note: we renamed the field from "from" to "sender" in the proto.
         from_user = request.sender
@@ -105,6 +111,7 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
         logging.info(f"Message from '{from_user}' to '{to_user}' sent")
         return chat_pb2.SendMessageResponse(message="Message sent successfully", success=True)
 
+    #Retrival of unread messages
     def ReadNewMessages(self, request, context):
         username = request.username
         count = request.count
@@ -123,6 +130,8 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
         logging.info(f"Read {len(encoded)} new messages for user '{username}'")
         return chat_pb2.ReadNewMessagesResponse(messages=encoded, success=True)
 
+
+    #Message Deletion, option to delete all messages if requested
     def DeleteMessages(self, request, context):
         username = request.username
         msg_ids = request.message_ids  # list of ints; a single value -1 indicates "delete all"
@@ -146,6 +155,8 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
         logging.info(f"Deleted {deleted_count} messages for user '{username}'")
         return chat_pb2.DeleteMessagesResponse(message=f"Deleted {deleted_count} messages.", success=True)
 
+
+    #Removes account on request
     def DeleteAccount(self, request, context):
         username = request.username
         if not username:
@@ -156,6 +167,7 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
         logging.info(f"Account deleted: {username}")
         return chat_pb2.DeleteAccountResponse(message=f"Account '{username}' deleted.", success=True)
 
+    #List all read messages for a user
     def ListMessages(self, request, context):
         username = request.username
         if not username or username not in users_db:
@@ -165,6 +177,8 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
         logging.info(f"Listing all read messages for user '{username}'")
         return chat_pb2.ListMessagesResponse(messages=encoded, success=True)
 
+
+# logic to start a server, initialization of the gRPC sever and conecting it to the specified address
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     chat_pb2_grpc.add_ChatServiceServicer_to_server(ChatService(), server)
@@ -173,6 +187,8 @@ def serve():
     server.start()
     print(f"Server started on {bind_address}")
     logging.info(f"Server listening on {bind_address}")
+
+    #Infinite loop to keep the server running, with keyboard interrupt exceptions
     try:
         while True:
             time.sleep(86400)
@@ -181,5 +197,6 @@ def serve():
         logging.info("Server shutting down (KeyboardInterrupt).")
         server.stop(0)
 
+#entryway into the main application, starting the server
 if __name__ == '__main__':
     serve()
