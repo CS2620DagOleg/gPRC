@@ -204,24 +204,16 @@ message ListMessagesResponse { repeated string messages = 1; bool success = 2; }
 
 ## 7. Testing
 
-### Overview
+### 7.1 Overview
 
-- **Unit Testing**:
-  - Uses Python’s `unittest` framework to test both server and client functionality.
-  - Tests verify that each RPC call (e.g. `CreateAccount`, `Login`, etc.) correctly modifies or reads the in-memory database (`users_db`).
+We use **Python’s `unittest`** framework for server-side testing. Tests ensure that each gRPC call (e.g., `CreateAccount`, `Login`, `SendMessage`) behaves correctly against an in-memory database (`users_db`). We also employ **coverage** to measure how much of the code our tests exercise.
 
-- **Running Tests**:
+### 7.2 Installing Test Dependencies
 
-  ```bash
-  python -m coverage run -m unittest test_chat_server.py
-  python -m coverage run -m unittest test_chat_client.py
-  python -m coverage report -m
-  ```
+Make sure you have all necessary packages installed, including `coverage`:
 
-- **Test Focus**:
-  - **gRPC Serialization/Deserialization**: Ensures the generated messages follow the expected format.
-  - **Business Logic**: Verifies that account creation, message sending, and deletion behave as intended.
-
+```bash
+pip install grpcio grpcio-tools protobuf coverage
 ---
 
 ## 8. Troubleshooting
